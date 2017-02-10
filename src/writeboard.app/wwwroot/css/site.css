@@ -1,0 +1,53 @@
+﻿body,h1,h2,h3,h4,h5,h6 {font-family: "Raleway", sans-serif}
+body, html {
+		height: 100% !important;
+		line-height: 1.8;
+}
+/* Full height image header */
+.bgimg-1 {
+    background-position: center;
+    background-size: cover;
+    background-image: url("/images/cover_header.png");
+    min-height: 100%;
+    padding-top: 25%;
+}
+
+#wb-brand {
+    padding: 12px;
+}
+
+#wb-logo {
+    float: left;
+    height: 35px;
+    width: 35px;
+}
+
+#wb-title {
+    margin-left: 10px;
+    font-size: 19px;
+}
+
+.w3-navbar li a {
+		padding: 16px;
+		float: left;
+}
+
+.w3-navbar {
+    background-color: #205081;
+    color: #fff; 
+    text-shadow: 1px 1px rgba(0,0,0,.5);
+}
+
+.w3-display-left {
+    position: inherit;
+    margin-top: 59px;
+}
+
+.wb-header-logo, .wb-header-subtitle {
+    color: #fff !important;
+    text-shadow: 1px 2px rgba(0,0,0,.5) !important;
+}
+
+.w3-text-blue, .w3-hover-text-blue:hover {
+    text-shadow: 1px 2px rgba(0,0,0,.5) !important;
+}
