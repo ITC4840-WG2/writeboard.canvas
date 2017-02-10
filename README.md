@@ -1,2 +1,2 @@
-# writeboard.surface
-WriteBoard Surface Web Application
+# writeboard.app
+WriteBoard Web Application
