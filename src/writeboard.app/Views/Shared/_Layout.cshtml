@@ -1,0 +1,76 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="X-UA-Compatible" content="IE=8" />
+    <meta charset="utf-8" />    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"]</title>
+    <link runat="server" rel="shortcut icon" href="~/fav.ico" type="image/x-icon" />
+    <link runat="server" rel="icon" href="~/fav.ico" type="image/ico" />
+
+    <environment names="Development">
+        <link rel="stylesheet" href="http://www.w3schools.com/lib/w3.css">
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Raleway">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+        <link rel="stylesheet" href="~/css/site.css" />
+    </environment>
+    <environment names="Staging,Production">
+        <link rel="stylesheet" href="http://www.w3schools.com/lib/w3.css">
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Raleway">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+        <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    </environment>
+</head>
+<body>
+
+    <!-- Navbar (sit on top) -->
+    <div class="w3-top">
+        <ul class="w3-navbar w3-card-2" id="wb-navbar">
+            <li>
+                <a href="#home" class="w3-wide" id="wb-brand">
+                    <img src="~/images/logo.png" id="wb-logo" />
+                    <span id="wb-title">WriteBoard</span>
+                </a>
+            </li>
+            <!-- Right-sided navbar links -->
+            <li class="w3-right w3-hide-small">
+                <a href="#new">New</a>
+            </li>
+            <!-- Hide right-floated links on small screens and replace them with a menu icon -->
+            <li>
+                <a href="javascript:void(0)" class="w3-right w3-hide-large w3-hide-medium" onclick="w3_open()">
+                    <i class="fa fa-bars w3-padding-right w3-padding-left"></i>
+                </a>
+            </li>
+        </ul>
+    </div>
+    <!-- Sidenav on small screens when clicking the menu icon -->
+    <nav class="w3-sidenav w3-black w3-card-2 w3-animate-left w3-hide-medium w3-hide-large" style="display:none" id="wb-side-nav">
+        <a href="javascript:void(0)" onclick="w3_close()" class="w3-large w3-padding-16">Close ×</a>
+        <a href="#new" onclick="w3_close()">New</a>
+    </nav>
+
+    <div class="container body-content">
+        @RenderBody()
+        <hr />
+
+        <!-- Footer -->
+        <footer class="w3-center w3-black w3-padding-64">
+            <div class="w3-xlarge w3-section">
+                <p>&copy; 2017 - WriteBoard</p>
+            </div>
+        </footer>
+    </div>
+
+    <environment names="Development">
+        <script src="https://maps.googleapis.com/maps/api/js"></script>
+        <script src="~/js/site.js" asp-append-version="true"></script>
+    </environment>
+    <environment names="Staging,Production">
+        <script src="https://maps.googleapis.com/maps/api/js"></script>
+        <script src="~/js/site.min.js" asp-append-version="true"></script>
+    </environment>
+
+    @RenderSection("scripts", required: false)
+</body>
+</html>
