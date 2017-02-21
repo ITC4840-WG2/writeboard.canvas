@@ -3,7 +3,11 @@
 }
 
 <div class="tools">
-    <a href="#canvas" data-tool="marker">Marker</a>
-    <a href="#canvas" data-tool="eraser">Eraser</a>
+    @*<a href="#canvas" data-tool="marker">Marker</a>
+    <a href="#canvas" data-tool="eraser">Eraser</a>*@
+    <input id="marker" type="range" max="10" min="1" value="1">
 </div>
-<canvas id="canvas" width="800" height="300"></canvas>
+
+<canvas id="canvas"></canvas>
+<br/>
+<button id="clear">Clear</button>
