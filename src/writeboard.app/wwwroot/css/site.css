@@ -1,7 +1,7 @@
 ﻿body,h1,h2,h3,h4,h5,h6 {font-family: "Raleway", sans-serif}
 
 .container {
-    padding-top: 15px;
+    padding-top: 1px;
 }
 
 #wb-brand {
@@ -45,11 +45,9 @@ canvas {
 }
 
 #clear {
-  font-size:1rem;
   background:#205081;
   color:#fff;
   border:0;
-  padding:8px;
   cursor:pointer;
   margin-left: 5px;
 }

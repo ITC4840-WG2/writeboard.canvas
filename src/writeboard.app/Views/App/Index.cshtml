@@ -3,11 +3,15 @@
 }
 
 <div class="tools">
-    @*<a href="#canvas" data-tool="marker">Marker</a>
-    <a href="#canvas" data-tool="eraser">Eraser</a>*@
-    <input id="marker" type="range" max="10" min="1" value="1">
-</div>
+    <button id="wb-clear">Clear</button>
+    <button id="wb-marker">Marker</button>
+    <button id="wb-eraser">Eraser</button>
 
-<canvas width="575" height="300" id="wb-canvas"></canvas>
+    &nbsp;
+    <i class="fa fa-dot"></i>
+    <input id="wb-line-width" type="range" max="10" min="1" value="1">
+
+    <input id="wb-color-picker" class="color no-alpha" value="#000000" />
+</div>
+<canvas width="800" height="400" id="wb-canvas"></canvas>
 <br/>
-<button id="clear">Clear</button>

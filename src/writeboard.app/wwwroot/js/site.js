@@ -1,27 +1,45 @@
-﻿$(function () {
-    var marker = "rgba(0,0,0,1)";
-    var markerWidth = 1;
+﻿var lineWidth = 1;
+var tool = 'marker';
+var tools = {};
+$(function () {
+    //tool init options
+    tools = {
+        marker: {
+            color: 'rgba(0, 0, 0, 1)',
+            globalCompositeOperation: 'source-over'
+        },
+        eraser: {
+            color: 'rgba(255,255,255,0)',
+            globalCompositeOperation: 'destination-out'
+        }
+    };
+
+    //color picker
+    $('#wb-color-picker').colorPicker({
+        renderCallback: function (e, toggled) {
+            tools.marker.color = '#' + this.color.colors.HEX;
+            e.val('#' + this.color.colors.HEX);
+        }
+    });
+
+    //canvas
+    var canvas = $('#wb-canvas')[0].getContext('2d');
 
     var lastEvent;
     var mouseDown = false;
-
-    var context = $('#wb-canvas')[0].getContext('2d');
-    var $canvas = $('#wb-canvas');
-
-    $canvas.mousedown(function (e) {
+    $('#wb-canvas').mousedown(function (e) {
         lastEvent = e;
         mouseDown = true;
-        //console.log(lastEvent);
     }).mousemove(function (e) {
         if (mouseDown) {
-            context.beginPath();
-
-            context.moveTo(lastEvent.offsetX, lastEvent.offsetY);
-            context.lineTo(e.offsetX, e.offsetY);
-            context.lineWidth = markerWidth;
-            context.strokeStyle = marker;
-            context.lineCap = 'round';
-            context.stroke();
+            canvas.beginPath();
+            canvas.globalCompositeOperation = tool.globalCompositeOperation;
+            canvas.moveTo(lastEvent.offsetX, lastEvent.offsetY);
+            canvas.lineTo(e.offsetX, e.offsetY);
+            canvas.lineWidth = lineWidth;
+            canvas.strokeStyle = tools[tool].color;
+            canvas.lineCap = 'round';
+            canvas.stroke();
 
             lastEvent = e;
         }
@@ -29,17 +47,23 @@
         mouseDown = false;
     });
 
-    /****CLEAR****/
-    var clear = function () {
-        context.clearRect(0, 0, 575, 300);
-    };
-    $('#clear').on("click", clear);
+    //eraser button
+    $('#wb-eraser').click(function () {
+        tool = tools.eraser;
+    });
 
-    /****CHANGE MARGER WIDTH****/
-    var changeWidth = function () {
-        markerWidth = $("#marker").val();
-        //console.log(markerWidth);
-    };
+    //marker button
+    $('#wb-marker').click(function () {
+        tool = tools.marker;
+    });
 
-    $("#marker").change(changeWidth);
+    //clear button
+    $('#wb-clear').click(function () {
+        canvas.clearRect(0, 0, 800, 400);
+    });
+
+    //marker width
+    $("#wb-line-width").change(function () {
+        lineWidth = $(this).val();
+    });
 });
