@@ -32,7 +32,6 @@
     </environment>
 </head>
 <body>
-
     <!-- Navbar (sit on top) -->
     <div class="w3-top">
         <ul class="w3-navbar w3-card-2" id="wb-navbar">
@@ -44,7 +43,7 @@
             </li>
             <!-- Right-sided navbar links -->
             <li class="w3-right w3-hide-small">
-                <a href="#new">New</a>
+                <a href="#" onclick="document.getElementById('wb-register').style.display='block'">New</a>
             </li>
             <!-- Hide right-floated links on small screens and replace them with a menu icon -->
             <li>
@@ -57,12 +56,56 @@
     <!-- Sidenav on small screens when clicking the menu icon -->
     <nav class="w3-sidenav w3-card-2 w3-animate-left w3-hide-medium w3-hide-large" style="display:none" id="wb-side-nav">
         <a href="javascript:void(0)" onclick="w3_close()" class="w3-large w3-padding-16">Close ×</a>
-        <a href="#new" onclick="w3_close()">New</a>
+        <a href="#" onclick="document.getElementById('wb-register').style.display='block'">New</a>
     </nav>
+
+    <!-- Registration Modal -->
+    <div id="wb-register" class="w3-modal">
+        <div class="w3-modal-content">
+
+            <header id="wb-modal-header">
+                <span onclick="document.getElementById('wb-register').style.display='none'" class="w3-closebtn">
+                    <i class="fa fa-window-close"></i>
+                 </span>
+                <img src="~/images/logo.png" id="wb-logo" />
+                <span id="wb-title">WriteBoard Registration</span>
+            </header>
+
+            <div id="wb-modal-container">
+                <label>
+                    <i class="fa fa-key"></i>
+                    <b>Unique URL Key</b>
+                </label>
+                <input type="text" placeholder="Enter a Unique Key" name="wb-key" required>
+              
+                <label>
+                    <i class="fa fa-info-circle"></i>
+                    <b>Description</b>
+                </label>
+                <input type="text" placeholder="WriteBoard Description" name="wb-desc" required>
+
+                <label>
+                    <i class="fa fa-envelope"></i>
+                    <b>Email Address</b>
+                </label>
+                <input type="email" placeholder="Contact Email" name="wb-email" required>
+
+                <button id="wb-register-submit" type="submit">
+                    <i class="fa fa-download"></i> Create WriteBoard
+                </button>
+            </div>
+
+            <footer id="wb-modal-footer">
+                <div>
+                    &copy; 2017 - WriteBoard
+                </div>
+            </footer>
+
+        </div>
+    </div>
 
     <div class="container">
         @RenderBody()
-        <hr />
 
         <!-- Footer -->
         <footer id="wb-footer">
