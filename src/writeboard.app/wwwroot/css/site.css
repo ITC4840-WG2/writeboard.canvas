@@ -1,46 +1,84 @@
-﻿body,h1,h2,h3,h4,h5,h6 {font-family: "Raleway", sans-serif}
-body, html {
-		height: 100% !important;
-		line-height: 1.8;
+﻿body,h1,h2,h3,h4,h5,h6 {
+    font-family: "Raleway", sans-serif
+
 }
-/* Full height image header */
-.bgimg-1 {
-    background-position: center;
-    background-size: cover;
-    background-image: url("/images/cover_header.png");
-    min-height: 100%;
-    padding-top: 25%;
+
+.container {
+    padding-top: 1px;
 }
 
 #wb-brand {
-    padding: 12px;
+    margin-top: 0px;
+    padding: 9px;
 }
 
 #wb-logo {
     float: left;
-    height: 35px;
-    width: 35px;
+    height: 37px;
+    width: 37px;
 }
 
 #wb-title {
-    margin-left: 10px;
-    font-size: 19px;
+    margin-left: 7px;
+    font-size: 23px;
 }
 
-.w3-navbar li a {
-		padding: 16px;
-		float: left;
-}
-
-.w3-navbar {
+#wb-navbar, #wb-side-nav, #wb-footer {
     background-color: #205081;
     color: #fff; 
     text-shadow: 1px 1px rgba(0,0,0,.5);
 }
 
-.w3-display-left {
-    position: inherit;
-    margin-top: 59px;
+input[type=text], input[type=email] {
+    width: 100%;
+    padding: 12px 20px;
+    margin: 8px 0;
+    display: inline-block;
+    border: 1px solid #ccc;
+    box-sizing: border-box;
+}
+
+#wb-register-submit {
+    background-color: #4CAF50;
+    color: #fff;
+    text-shadow: 1px 1px rgba(0,0,0,.5);
+    padding: 14px 20px;
+    margin: 8px 0;
+    border: none;
+    cursor: pointer;
+    width: 100%;
+}
+
+#wb-register-submit:hover {
+    background-color: darkgreen;
+}
+
+#wb-footer {
+    background-color: #205081;
+    max-height: 70px;
+    width: 100%;
+    bottom: 0;
+    position: fixed;
+    padding-left: 10px;
+    font-size: 16px;
+}
+
+#wb-modal-footer, #wb-modal-header {
+    background-color: #205081;
+    color: #fff; 
+    text-shadow: 1px 1px rgba(0,0,0,.5);
+    padding: 10px;
+    font-size: 16px;
+}
+
+#wb-modal-container {
+    padding: 10px;
+    background-color: #f5f5f5;
+}
+
+#wb-tools {
+    margin-bottom: 10px;
+    padding-left: 10px;
 }
 
 .wb-header-logo, .wb-header-subtitle {
@@ -48,6 +86,41 @@ body, html {
     text-shadow: 1px 2px rgba(0,0,0,.5) !important;
 }
 
-.w3-text-blue, .w3-hover-text-blue:hover {
-    text-shadow: 1px 2px rgba(0,0,0,.5) !important;
+/* canvas */
+canvas {
+    background:#fff;
+    box-shadow:0 0 15px #999;
+    cursor:crosshair;
+}
+
+#clear {
+  background:#205081;
+  color:#fff;
+  border:0;
+  cursor:pointer;
+  margin-left: 5px;
+}
+
+#clear:hover {
+    background:#205081;
+    color:#fff;
+}
+
+/* w3 overrides */
+.w3-top {
+    position: inherit;
+}
+
+.w3-navbar li a {
+		padding: 16px;
+		float: left;
+}
+
+.w3-display-left {
+    position: inherit;
+    margin-top: 59px;
+}
+
+.w3-modal-content {
+    width: 450px;
 }

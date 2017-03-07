@@ -1,47 +1,69 @@
-﻿// Google Map Location
-var myCenter = new google.maps.LatLng(42.3601, -71.0589);
-
-function initialize() {
-    var mapProp = {
-        center: myCenter,
-        zoom: 12,
-        scrollwheel: false,
-        draggable: false,
-        mapTypeId: google.maps.MapTypeId.ROADMAP
+﻿var lineWidth = 1;
+var tool = 'marker';
+var tools = {};
+$(function () {
+    //tool init options
+    tools = {
+        marker: {
+            color: 'rgba(0, 0, 0, 1)',
+            globalCompositeOperation: 'source-over'
+        },
+        eraser: {
+            color: 'rgba(255,255,255,0)',
+            globalCompositeOperation: 'destination-out'
+        }
     };
 
-    var map = new google.maps.Map(document.getElementById("googleMap"), mapProp);
-
-    var marker = new google.maps.Marker({
-        position: myCenter
+    //color picker
+    $('#wb-color-picker').colorPicker({
+        renderCallback: function (e, toggled) {
+            tools.marker.color = '#' + this.color.colors.HEX;
+            e.val('#' + this.color.colors.HEX);
+        }
     });
 
-    marker.setMap(map);
-}
+    //canvas
+    var canvas = $('#wb-canvas')[0].getContext('2d');
 
-google.maps.event.addDomListener(window, 'load', initialize);
+    var lastEvent;
+    var mouseDown = false;
+    $('#wb-canvas').mousedown(function (e) {
+        lastEvent = e;
+        mouseDown = true;
+    }).mousemove(function (e) {
+        if (mouseDown) {
+            canvas.beginPath();
+            canvas.globalCompositeOperation = tool.globalCompositeOperation;
+            canvas.moveTo(lastEvent.offsetX, lastEvent.offsetY);
+            canvas.lineTo(e.offsetX, e.offsetY);
+            canvas.lineWidth = lineWidth;
+            canvas.strokeStyle = tools[tool].color;
+            canvas.lineCap = 'round';
+            canvas.stroke();
 
-// Modal Image Gallery
-function onClick(element) {
-    document.getElementById("img01").src = element.src;
-    document.getElementById("modal01").style.display = "block";
-    var captionText = document.getElementById("caption");
-    captionText.innerHTML = element.alt;
-}
+            lastEvent = e;
+        }
+    }).mouseup(function () {
+        mouseDown = false;
+    });
 
+    //eraser button
+    $('#wb-eraser').click(function () {
+        tool = tools.eraser;
+    });
 
-// Toggle between showing and hiding the sidenav when clicking the menu icon
-var mySidenav = document.getElementById("wb-side-nav");
+    //marker button
+    $('#wb-marker').click(function () {
+        tool = tools.marker;
+    });
 
-function w3_open() {
-    if (mySidenav.style.display === 'block') {
-        mySidenav.style.display = 'none';
-    } else {
-        mySidenav.style.display = 'block';
-    }
-}
+    //clear button
+    $('#wb-clear').click(function () {
+        canvas.clearRect(0, 0, 800, 400);
+    });
 
-// Close the sidenav with the close button
-function w3_close() {
-    mySidenav.style.display = "none";
-}
+    //marker width
+    $("#wb-line-width").change(function () {
+        lineWidth = $(this).val();
+    });
+});

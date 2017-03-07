@@ -1,4 +1,17 @@
 ﻿@{
-    ViewData["Title"] = "WriteBoard";
+    ViewData["Title"] = "WriteBoard App";
 }
 
+<div id="wb-tools">
+    <button id="wb-clear">Clear</button>
+    <button id="wb-marker">Marker</button>
+    <button id="wb-eraser">Eraser</button>
+
+    &nbsp;
+    <i class="fa fa-circle-o"></i>
+    <input id="wb-line-width" type="range" max="10" min="1" value="1">
+    <i class="fa fa-2x fa-circle-o"></i>
+
+    <input id="wb-color-picker" class="color no-alpha" value="#000000" />
+</div>
+<canvas width="800" height="400" id="wb-canvas"></canvas>
