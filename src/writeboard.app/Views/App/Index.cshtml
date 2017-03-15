@@ -3,15 +3,17 @@
 }
 
 <div id="wb-tools">
-    <button id="wb-clear">Clear</button>
-    <button id="wb-marker">Marker</button>
-    <button id="wb-eraser">Eraser</button>
+    <button id="wb-scroll"><i class="fa fa-arrows"></i></button>
+    <button id="wb-clear"><i class="fa fa-file-o"></i></button>
+    <button id="wb-marker"><i class="fa fa-pencil"></i></button>
+    <input id="wb-color-picker" class="color no-alpha" value="#000000" />
+    <button id="wb-eraser"><i class="fa fa-eraser"></i></button>
 
     &nbsp;
-    <i class="fa fa-circle-o"></i>
-    <input id="wb-line-width" type="range" max="10" min="1" value="1">
-    <i class="fa fa-2x fa-circle-o"></i>
-
-    <input id="wb-color-picker" class="color no-alpha" value="#000000" />
+    <input id="wb-line-width" type="range" max="5" min="1" value="1">
+    @*<div id="wb-line-width-shape"></div>*@
 </div>
-<canvas width="800" height="400" id="wb-canvas"></canvas>
+<canvas id="wb-canvas" width="1920" height="1080"></canvas>
+<canvas id="wb-map" width="240" height="135"></canvas>
+<video id="wb-cam" width="240" height="135" data-enabled="false"></video>
+<button id="wb-capture"><i class="fa fa-camera"></i></button>

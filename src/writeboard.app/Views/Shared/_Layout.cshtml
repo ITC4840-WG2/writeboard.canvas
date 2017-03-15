@@ -43,7 +43,14 @@
             </li>
             <!-- Right-sided navbar links -->
             <li class="w3-right w3-hide-small">
-                <a href="#" onclick="document.getElementById('wb-register').style.display='block'">New</a>
+                <a href="#" title="New WriteBoard" onclick="document.getElementById('wb-register').style.display='block'">
+                    <i class="fa fa-plus"></i>
+                </a>
+            </li>
+            <li class="w3-right w3-hide-small">
+                <a href="#" title="Save Changes">
+                    <i class="fa fa-save"></i>
+                </a>
             </li>
             <!-- Hide right-floated links on small screens and replace them with a menu icon -->
             <li>
@@ -56,7 +63,10 @@
     <!-- Sidenav on small screens when clicking the menu icon -->
     <nav class="w3-sidenav w3-card-2 w3-animate-left w3-hide-medium w3-hide-large" style="display:none" id="wb-side-nav">
         <a href="javascript:void(0)" onclick="w3_close()" class="w3-large w3-padding-16">Close ×</a>
-        <a href="#" onclick="document.getElementById('wb-register').style.display='block'">New</a>
+        <a href="#" onclick="document.getElementById('wb-register').style.display='block'">
+            <i class="fa fa-plus"></i>
+            New WriteBoard
+        </a>
     </nav>
 
     <!-- Registration Modal -->
@@ -72,27 +82,35 @@
             </header>
 
             <div id="wb-modal-container">
-                <label>
-                    <i class="fa fa-key"></i>
-                    <b>Unique URL Key</b>
-                </label>
-                <input type="text" placeholder="Enter a Unique Key" name="wb-key" required>
-              
-                <label>
-                    <i class="fa fa-info-circle"></i>
-                    <b>Description</b>
-                </label>
-                <input type="text" placeholder="WriteBoard Description" name="wb-desc" required>
+                <form asp-controller="App" asp-action="RegisterWriteBoard" method="post">
+                    <div class="row">
+                        <label>
+                            <i class="fa fa-key"></i>
+                            <b>Unique URL Key</b>
+                        </label>
+                        <input type="text" id="wb-key" runat="server" placeholder="Enter a Unique Key" name="wb-key" required>
+                    </div>
 
-                <label>
-                    <i class="fa fa-envelope"></i>
-                    <b>Email Address</b>
-                </label>
-                <input type="email" placeholder="Contact Email" name="wb-email" required>
+                    <div class="row">
+                        <label>
+                            <i class="fa fa-info-circle"></i>
+                            <b>Description</b>
+                        </label>
+                        <input type="text" id="wb-desc" runat="server" placeholder="WriteBoard Description" name="wb-desc" required>
+                    </div>
 
-                <button id="wb-register-submit" type="submit">
-                    <i class="fa fa-download"></i> Create WriteBoard
-                </button>
+                    <div class="row">
+                        <label>
+                            <i class="fa fa-envelope"></i>
+                            <b>Email Address</b>
+                        </label>
+                        <input type="email" id="wb-email" runat="server" TextMode="Email" placeholder="Contact Email" name="wb-email" required>
+                    </div>
+
+                    <button id="wb-register-submit" type="submit">
+                        <i class="fa fa-download"></i> Create WriteBoard
+                    </button>
+                </form>
             </div>
 
             <footer id="wb-modal-footer">
@@ -100,19 +118,11 @@
                     &copy; 2017 - WriteBoard
                 </div>
             </footer>
-
         </div>
     </div>
 
     <div class="container">
         @RenderBody()
-
-        <!-- Footer -->
-        <footer id="wb-footer">
-            <div>
-                <p>&copy; 2017 - WriteBoard</p>
-            </div>
-        </footer>
     </div>
 </body>
 </html>

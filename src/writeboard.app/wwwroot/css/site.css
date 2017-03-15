@@ -23,13 +23,59 @@
     font-size: 23px;
 }
 
-#wb-navbar, #wb-side-nav, #wb-footer {
+#wb-navbar {
     background-color: #205081;
+    max-height: 70px;
+    width: 100%;
+    bottom: 0;
+    position: fixed;
+    padding-left: 10px;
+    font-size: 16px;
     color: #fff; 
     text-shadow: 1px 1px rgba(0,0,0,.5);
 }
 
-input[type=text], input[type=email] {
+#wb-tools {
+    max-height: 20px;
+    width: 100%;
+    bottom: 0;
+    position: fixed;
+    padding-left: 10px;
+    font-size: 16px;
+    left: 25%;
+    margin-bottom: 30px;
+    color: #fff; 
+    text-shadow: 1px 1px rgba(0,0,0,.5);
+    padding-top: 5px;
+}
+
+#wb-line-width {
+    width: 50px;
+}
+
+#wb-line-width-shape {
+  width: 0;
+  height: 0;
+  border-left: 125px solid transparent;
+  border-right: 0px solid transparent;
+  border-bottom: 15px solid #999;
+  margin:5px auto;
+}
+
+#wb-color-picker {
+    position: relative;
+    display: inline-block;
+    width: 30px;
+    padding: 4px;
+    height: 28px;
+    border: 1px solid #666;
+    border-radius: 2px;
+    background: #eee;
+    color: transparent !important;
+    box-shadow: inset 0 -17px 8px rgba(0,0,0,0.3), inset 0 -4px 7px rgba(0,0,0,0.3);
+}
+
+#wb-key, #wb-desc, #wb-email {
     width: 100%;
     padding: 12px 20px;
     margin: 8px 0;
@@ -53,16 +99,6 @@ input[type=text], input[type=email] {
     background-color: darkgreen;
 }
 
-#wb-footer {
-    background-color: #205081;
-    max-height: 70px;
-    width: 100%;
-    bottom: 0;
-    position: fixed;
-    padding-left: 10px;
-    font-size: 16px;
-}
-
 #wb-modal-footer, #wb-modal-header {
     background-color: #205081;
     color: #fff; 
@@ -76,11 +112,6 @@ input[type=text], input[type=email] {
     background-color: #f5f5f5;
 }
 
-#wb-tools {
-    margin-bottom: 10px;
-    padding-left: 10px;
-}
-
 .wb-header-logo, .wb-header-subtitle {
     color: #fff !important;
     text-shadow: 1px 2px rgba(0,0,0,.5) !important;
@@ -91,6 +122,28 @@ canvas {
     background:#fff;
     box-shadow:0 0 15px #999;
     cursor:crosshair;
+}
+
+#wb-canvas {
+    margin-bottom: 60px;
+}
+
+#wb-map, #wb-cam {
+    float: right;
+    top: 20px;
+    position: fixed;
+    right: 20px;
+}
+
+#wb-cam {
+    width: 230px
+    height: 300px;
+    object-fit: cover;
+}
+
+#wb-capture {
+    position: fixed;
+    z-index: 9999;
 }
 
 #clear {
