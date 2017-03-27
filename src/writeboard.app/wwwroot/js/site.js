@@ -1,23 +1,26 @@
-﻿var lineWidth = 1;
-var tool = 'marker';
-var tools = {};
+﻿var tools = {};
 $(function () {
     //tool init options
     tools = {
         marker: {
-            color: 'rgba(0, 0, 0, 1)',
-            globalCompositeOperation: 'source-over'
+            strokeStyle: $('#wb-color-picker').val(),
+            globalCompositeOperation: 'source-over',
+            lineCap: 'round',
+            lineWidth: 1
         },
         eraser: {
-            color: 'rgba(255,255,255,0)',
-            globalCompositeOperation: 'destination-out'
+            strokeStyle: 'rgba(0,0,0,1.0)',
+            globalCompositeOperation: 'destination-out',
+            lineCap: 'square',
+            lineWidth: 10
         }
     };
+    tools.selectedTool = tools.marker;
 
     //color picker
     $('#wb-color-picker').colorPicker({
         renderCallback: function (e, toggled) {
-            tools.marker.color = '#' + this.color.colors.HEX;
+            tools.marker.strokeStyle = '#' + this.color.colors.HEX;
             e.val('#' + this.color.colors.HEX);
         }
     });
@@ -48,14 +51,17 @@ $(function () {
     }).mousemove(function (e) {
         if (mouseDown) {
             context.beginPath();
-            context.globalCompositeOperation = tool.globalCompositeOperation;
             context.moveTo(lastEvent.offsetX, lastEvent.offsetY);
             context.lineTo(e.offsetX, e.offsetY);
-            context.lineWidth = lineWidth;
-            context.strokeStyle = tools[tool].color;
-            context.lineCap = 'round';
-            context.stroke();
 
+            //tool specific options
+            context.globalCompositeOperation = tools.selectedTool.globalCompositeOperation;
+            context.lineWidth = tools.selectedTool.lineWidth;
+            context.strokeStyle = tools.selectedTool.strokeStyle;
+            context.lineCap = tools.selectedTool.lineCap;
+
+            //execute event
+            context.stroke();
             lastEvent = e;
         }
     }).mouseup(function () {
@@ -110,23 +116,23 @@ $(function () {
         setTimeout(overlayCapture, 10, cam, context, width, height);
     }
 
+    //marker width
+    $("#wb-line-width").change(function () {
+        tools.marker.lineWidth = $(this).val();
+    });
+
     //eraser button
     $('#wb-eraser').click(function () {
-        tool = tools.eraser;
+        tools.selectedTool = tools.eraser;
     });
 
     //marker button
     $('#wb-marker').click(function () {
-        tool = tools.marker;
+        tools.selectedTool = tools.marker;
     });
 
     //clear button
     $('#wb-clear').click(function () {
         context.clearRect(0, 0, 1920, 1080);
-    });
-
-    //marker width
-    $("#wb-line-width").change(function () {
-        lineWidth = $(this).val();
     });
 });
