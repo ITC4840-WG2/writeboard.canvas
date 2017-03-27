@@ -3,16 +3,21 @@ $(function () {
     //tool init options
     tools = {
         marker: {
+            toolName: 'marker',
             strokeStyle: $('#wb-color-picker').val(),
             globalCompositeOperation: 'source-over',
             lineCap: 'round',
             lineWidth: 1
         },
         eraser: {
+            toolName: 'eraser',
             strokeStyle: 'rgba(0,0,0,1.0)',
             globalCompositeOperation: 'destination-out',
             lineCap: 'square',
             lineWidth: 10
+        },
+        scroll: {
+            toolName: 'scroll'
         }
     };
     tools.selectedTool = tools.marker;
@@ -24,6 +29,8 @@ $(function () {
             e.val('#' + this.color.colors.HEX);
         }
     });
+
+    disableScrolling();
 
     //canvas
     var canvas = $('#wb-canvas')[0];
@@ -42,30 +49,42 @@ $(function () {
     //    setTimeout(drawMap, 10, canvas, mapContext, width, height);
     //}
 
-    //drawing events
+    //canvas interaction events
     var lastEvent;
     var mouseDown = false;
-    $('#wb-canvas').mousedown(function (e) {
-        lastEvent = e;
-        mouseDown = true;
-    }).mousemove(function (e) {
-        if (mouseDown) {
-            context.beginPath();
-            context.moveTo(lastEvent.offsetX, lastEvent.offsetY);
-            context.lineTo(e.offsetX, e.offsetY);
-
-            //tool specific options
-            context.globalCompositeOperation = tools.selectedTool.globalCompositeOperation;
-            context.lineWidth = tools.selectedTool.lineWidth;
-            context.strokeStyle = tools.selectedTool.strokeStyle;
-            context.lineCap = tools.selectedTool.lineCap;
-
-            //execute event
-            context.stroke();
+    var mouseDownY = 0;
+    $('#wb-canvas').on({
+        mousedown: function (e) {
+            e.preventDefault();
+            mouseDown = true;
+            mouseDownY = e.pageY;
             lastEvent = e;
+        },
+        mousemove: function (e) {
+            e.preventDefault();
+            if (mouseDown && tools.selectedTool.toolName != 'scroll') {
+                context.beginPath();
+                context.moveTo(lastEvent.offsetX, lastEvent.offsetY);
+                context.lineTo(e.offsetX, e.offsetY);
+
+                //tool specific options
+                context.globalCompositeOperation = tools.selectedTool.globalCompositeOperation;
+                context.lineWidth = tools.selectedTool.lineWidth;
+                context.strokeStyle = tools.selectedTool.strokeStyle;
+                context.lineCap = tools.selectedTool.lineCap;
+
+                //execute event
+                context.stroke();
+                lastEvent = e;
+            }
+            else if (mouseDown && tools.selectedTool.toolName == 'scroll') {
+                $(window).scrollTop($(window).scrollTop() + (mouseDownY - e.pageY));
+            }
+        },
+        mouseup: function (e) {
+            e.preventDefault();
+            mouseDown = false;
         }
-    }).mouseup(function () {
-        mouseDown = false;
     });
 
     //whiteboard capture
@@ -116,6 +135,16 @@ $(function () {
         setTimeout(overlayCapture, 10, cam, context, width, height);
     }
 
+    //scroll button
+    $('#wb-scroll').click(function () {
+        tools.selectedTool = tools.scroll;
+        $('html, body').css({
+            overflow: 'auto',
+            height: 'auto'
+        });
+        $('#wb-canvas').css('cursor', 'move');
+    });
+
     //marker width
     $("#wb-line-width").change(function () {
         tools.marker.lineWidth = $(this).val();
@@ -124,15 +153,28 @@ $(function () {
     //eraser button
     $('#wb-eraser').click(function () {
         tools.selectedTool = tools.eraser;
+        disableScrolling();
     });
 
     //marker button
     $('#wb-marker').click(function () {
         tools.selectedTool = tools.marker;
+        disableScrolling();
     });
-
+    
     //clear button
     $('#wb-clear').click(function () {
         context.clearRect(0, 0, 1920, 1080);
+        disableScrolling();
     });
+
+    //lock canvas scrolling
+    function disableScrolling() {
+        $('#wb-canvas').css('cursor', 'auto');
+
+        $('html, body').css({
+            overflow: 'hidden',
+            height: '100%'
+        });
+    }
 });
