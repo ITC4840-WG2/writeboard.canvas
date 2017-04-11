@@ -21,6 +21,7 @@ $(function () {
         }
     };
     tools.selectedTool = tools.marker;
+    disableScrolling();
 
     //color picker
     $('#wb-color-picker').colorPicker({
@@ -29,8 +30,6 @@ $(function () {
             e.val('#' + this.color.colors.HEX);
         }
     });
-
-    disableScrolling();
 
     //canvas
     var canvas = $('#wb-canvas')[0];
@@ -49,20 +48,28 @@ $(function () {
     //    setTimeout(drawMap, 10, canvas, mapContext, width, height);
     //}
 
+    //load canvas state
+    if (wbState) {
+        var image = new Image();
+        image.onload = function () {
+            context.drawImage(image, 0, 0);
+            mapContext.drawImage(image, 0, 0);
+        };
+        image.src = wbState;
+    }
+   
     //canvas interaction events
     var lastEvent;
     var mouseDown = false;
     var mouseDownY = 0;
     $('#wb-canvas').on({
         mousedown: function (e) {
-            e.preventDefault();
             mouseDown = true;
             mouseDownY = e.pageY;
             lastEvent = e;
         },
         mousemove: function (e) {
-            e.preventDefault();
-            if (mouseDown && tools.selectedTool.toolName != 'scroll') {
+            if (mouseDown && tools.selectedTool.toolName !== 'scroll') {
                 context.beginPath();
                 context.moveTo(lastEvent.offsetX, lastEvent.offsetY);
                 context.lineTo(e.offsetX, e.offsetY);
@@ -77,17 +84,55 @@ $(function () {
                 context.stroke();
                 lastEvent = e;
             }
-            else if (mouseDown && tools.selectedTool.toolName == 'scroll') {
+            else if (mouseDown && tools.selectedTool.toolName === 'scroll') {
                 $(window).scrollTop($(window).scrollTop() + (mouseDownY - e.pageY));
             }
         },
         mouseup: function (e) {
-            e.preventDefault();
             mouseDown = false;
+        },
+        touchstart: function (e) {
+            e.preventDefault();
+            var touch = e.originalEvent.touches[0] || e.originalEvent.changedTouches[0];
+            canvas.dispatchEvent(new MouseEvent('mousedown', {
+                pageY: touch.pageY
+            }));
+        },
+        touchmove: function (e) {
+            e.preventDefault();
+            var elm = $(this).offset();
+            var touch = e.originalEvent.touches[0] || e.originalEvent.changedTouches[0];
+            canvas.dispatchEvent(new MouseEvent('mousemove', {
+                offsetX: touch.pageX - elm.left,
+                offsetY: touch.pageY - elm.top,
+                pageY: touch.pageY
+            }));
+        },
+        touchend: function (e) {
+            e.preventDefault();
+            canvas.dispatchEvent(new MouseEvent('mouseup'));
         }
     });
 
-    //whiteboard capture
+    //new writeboard
+    $('#wb-new').click(function (e) {
+        e.preventDefault();
+    });
+
+    //save writeboard state
+    $('#wb-save').click(function (e) {
+        e.preventDefault();
+        $.ajax({
+            type: "POST",
+            url: '/save',
+            data: { 'wb-key': wbKey, 'wb-state': canvas.toDataURL() },
+            success: function () {
+                alert('WriteBoard State Saved Succesfully!');
+            }
+        });
+    });
+
+    //image capture
     $('#wb-capture').css('top', $('#wb-cam').position().top);
     $('#wb-capture').css('left', $('#wb-cam').position().left);
     $(window).resize(function () {
@@ -96,7 +141,6 @@ $(function () {
     });
     var cam = $('#wb-cam')[0];
     $('#wb-capture').click(function () {
-        
         $('#wb-cam').data('enabled', 'true');
         $('#wb-map').attr('visibility', 'hidden');
         $('#wb-cam').attr('visibility', 'visible');
@@ -125,13 +169,13 @@ $(function () {
     });
     
     //overlay image on canvas and map live
-    cam.addEventListener('play', function () {
-        //overlayCapture(this, context, 1920, 1080);
+    $(cam).on({
+        play: function (e) {
+            overlayCapture(this, context, 1920, 1080);
+        }
     });
-
     function overlayCapture(capture, context, width, height) {
         context.drawImage(capture, 0, 0, width, height);
-
         setTimeout(overlayCapture, 10, cam, context, width, height);
     }
 
@@ -146,31 +190,35 @@ $(function () {
     });
 
     //marker width
-    $("#wb-line-width").change(function () {
+    $("#wb-line-width").change(function (e) {
+        e.preventDefault();
         tools.marker.lineWidth = $(this).val();
     });
 
     //eraser button
-    $('#wb-eraser').click(function () {
+    $('#wb-eraser').click(function (e) {
+        e.preventDefault();
         tools.selectedTool = tools.eraser;
         disableScrolling();
     });
 
     //marker button
-    $('#wb-marker').click(function () {
+    $('#wb-marker').click(function (e) {
+        e.preventDefault();
         tools.selectedTool = tools.marker;
         disableScrolling();
     });
     
     //clear button
-    $('#wb-clear').click(function () {
+    $('#wb-clear').click(function (e) {
+        e.preventDefault();
         context.clearRect(0, 0, 1920, 1080);
         disableScrolling();
     });
 
     //lock canvas scrolling
     function disableScrolling() {
-        $('#wb-canvas').css('cursor', 'auto');
+        $('#wb-canvas').css('cursor', 'crosshair');
 
         $('html, body').css({
             overflow: 'hidden',

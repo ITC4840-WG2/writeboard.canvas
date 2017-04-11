@@ -1,19 +1,22 @@
 ﻿@{
     ViewData["Title"] = "WriteBoard App";
 }
-
 <div id="wb-tools">
-    <button id="wb-scroll"><i class="fa fa-arrows"></i></button>
-    <button id="wb-clear"><i class="fa fa-file-o"></i></button>
-    <button id="wb-marker"><i class="fa fa-pencil"></i></button>
-    <input id="wb-color-picker" class="color no-alpha" value="#000000" />
-    <button id="wb-eraser"><i class="fa fa-eraser"></i></button>
-
+    <button id="wb-scroll" class="wb-tool"><i class="fa fa-fw fa-arrows"></i></button>
+    <button id="wb-clear" class="wb-tool"><i class="fa fa-fw fa-file-o"></i></button>
+    <button id="wb-marker" class="wb-tool"><i class="fa fa-fw fa-pencil"></i></button>
+    <input id="wb-color-picker" class="color no-alpha wb-tool" value="#000000" />
+    <button id="wb-eraser" class="wb-tool"><i class="fa fa-fw fa-eraser"></i></button>
     &nbsp;
     <input id="wb-line-width" type="range" max="5" min="1" value="1">
-    @*<div id="wb-line-width-shape"></div>*@
+    <span id="wb-line-width-shape"></span>
 </div>
 <canvas id="wb-canvas" width="1920" height="1080"></canvas>
 <canvas id="wb-map" width="240" height="135"></canvas>
 <video id="wb-cam" width="240" height="135" data-enabled="false"></video>
 <button id="wb-capture"><i class="fa fa-camera"></i></button>
+
+<script>
+    var wbKey = '@ViewBag.wbKey';
+    var wbState = '@ViewBag.wbState';
+</script>

@@ -8,7 +8,7 @@
 }
 
 #wb-brand {
-    margin-top: 0px;
+    margin-top: 0;
     padding: 9px;
 }
 
@@ -51,23 +51,27 @@
 
 #wb-line-width {
     width: 50px;
+    margin-bottom: -10px;
 }
 
 #wb-line-width-shape {
-  width: 0;
-  height: 0;
-  border-left: 125px solid transparent;
-  border-right: 0px solid transparent;
-  border-bottom: 15px solid #999;
-  margin:5px auto;
+    width: 0;
+    height: 0;
+    border-left: 50px solid transparent;
+    border-right: 0 solid transparent;
+    border-bottom: 10px solid #999;
+    margin-left: -50px;
+    position: inherit;
+    margin-top: 12px;
+    z-index: -999;
 }
 
 #wb-color-picker {
     position: relative;
     display: inline-block;
-    width: 30px;
+    width: 38px;
     padding: 4px;
-    height: 28px;
+    height: 35px;
     border: 1px solid #666;
     border-radius: 2px;
     background: #eee;
@@ -82,7 +86,6 @@
     margin: 8px 0;
     display: inline-block;
     border: 1px solid #ccc;
-    box-sizing: border-box;
 }
 
 #wb-register-submit {
@@ -118,6 +121,22 @@
     text-shadow: 1px 2px rgba(0,0,0,.5) !important;
 }
 
+.wb-tool {
+    background-color: #eee;
+    text-align: center;
+    -webkit-border-radius: 50%;
+    -moz-border-radius: 50%;
+    border-radius: 50%;
+    border: 1px solid #ccc;
+    width: 38px;
+    height: 35px;
+}
+
+.wb-tool:hover {
+    color: #FFF;
+    text-decoration: none;
+}
+
 /* canvas */
 canvas {
     background:#fff;
@@ -137,7 +156,7 @@ canvas {
 }
 
 #wb-cam {
-    width: 230px
+    width: 230px;
     height: 300px;
     object-fit: cover;
 }
