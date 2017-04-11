@@ -1,23 +1,32 @@
-﻿var lineWidth = 1;
-var tool = 'marker';
-var tools = {};
+﻿var tools = {};
 $(function () {
     //tool init options
     tools = {
         marker: {
-            color: 'rgba(0, 0, 0, 1)',
-            globalCompositeOperation: 'source-over'
+            toolName: 'marker',
+            strokeStyle: $('#wb-color-picker').val(),
+            globalCompositeOperation: 'source-over',
+            lineCap: 'round',
+            lineWidth: 1
         },
         eraser: {
-            color: 'rgba(255,255,255,0)',
-            globalCompositeOperation: 'destination-out'
+            toolName: 'eraser',
+            strokeStyle: 'rgba(0,0,0,1.0)',
+            globalCompositeOperation: 'destination-out',
+            lineCap: 'square',
+            lineWidth: 10
+        },
+        scroll: {
+            toolName: 'scroll'
         }
     };
+    tools.selectedTool = tools.marker;
+    disableScrolling();
 
     //color picker
     $('#wb-color-picker').colorPicker({
         renderCallback: function (e, toggled) {
-            tools.marker.color = '#' + this.color.colors.HEX;
+            tools.marker.strokeStyle = '#' + this.color.colors.HEX;
             e.val('#' + this.color.colors.HEX);
         }
     });
@@ -39,30 +48,91 @@ $(function () {
     //    setTimeout(drawMap, 10, canvas, mapContext, width, height);
     //}
 
-    //drawing events
+    //load canvas state
+    if (wbState) {
+        var image = new Image();
+        image.onload = function () {
+            context.drawImage(image, 0, 0);
+            mapContext.drawImage(image, 0, 0);
+        };
+        image.src = wbState;
+    }
+   
+    //canvas interaction events
     var lastEvent;
     var mouseDown = false;
-    $('#wb-canvas').mousedown(function (e) {
-        lastEvent = e;
-        mouseDown = true;
-    }).mousemove(function (e) {
-        if (mouseDown) {
-            context.beginPath();
-            context.globalCompositeOperation = tool.globalCompositeOperation;
-            context.moveTo(lastEvent.offsetX, lastEvent.offsetY);
-            context.lineTo(e.offsetX, e.offsetY);
-            context.lineWidth = lineWidth;
-            context.strokeStyle = tools[tool].color;
-            context.lineCap = 'round';
-            context.stroke();
-
+    var mouseDownY = 0;
+    $('#wb-canvas').on({
+        mousedown: function (e) {
+            mouseDown = true;
+            mouseDownY = e.pageY;
             lastEvent = e;
+        },
+        mousemove: function (e) {
+            if (mouseDown && tools.selectedTool.toolName !== 'scroll') {
+                context.beginPath();
+                context.moveTo(lastEvent.offsetX, lastEvent.offsetY);
+                context.lineTo(e.offsetX, e.offsetY);
+
+                //tool specific options
+                context.globalCompositeOperation = tools.selectedTool.globalCompositeOperation;
+                context.lineWidth = tools.selectedTool.lineWidth;
+                context.strokeStyle = tools.selectedTool.strokeStyle;
+                context.lineCap = tools.selectedTool.lineCap;
+
+                //execute event
+                context.stroke();
+                lastEvent = e;
+            }
+            else if (mouseDown && tools.selectedTool.toolName === 'scroll') {
+                $(window).scrollTop($(window).scrollTop() + (mouseDownY - e.pageY));
+            }
+        },
+        mouseup: function (e) {
+            mouseDown = false;
+        },
+        touchstart: function (e) {
+            e.preventDefault();
+            var touch = e.originalEvent.touches[0] || e.originalEvent.changedTouches[0];
+            canvas.dispatchEvent(new MouseEvent('mousedown', {
+                pageY: touch.pageY
+            }));
+        },
+        touchmove: function (e) {
+            e.preventDefault();
+            var elm = $(this).offset();
+            var touch = e.originalEvent.touches[0] || e.originalEvent.changedTouches[0];
+            canvas.dispatchEvent(new MouseEvent('mousemove', {
+                offsetX: touch.pageX - elm.left,
+                offsetY: touch.pageY - elm.top,
+                pageY: touch.pageY
+            }));
+        },
+        touchend: function (e) {
+            e.preventDefault();
+            canvas.dispatchEvent(new MouseEvent('mouseup'));
         }
-    }).mouseup(function () {
-        mouseDown = false;
     });
 
-    //whiteboard capture
+    //new writeboard
+    $('#wb-new').click(function (e) {
+        e.preventDefault();
+    });
+
+    //save writeboard state
+    $('#wb-save').click(function (e) {
+        e.preventDefault();
+        $.ajax({
+            type: "POST",
+            url: '/save',
+            data: { 'wb-key': wbKey, 'wb-state': canvas.toDataURL() },
+            success: function () {
+                alert('WriteBoard State Saved Succesfully!');
+            }
+        });
+    });
+
+    //image capture
     $('#wb-capture').css('top', $('#wb-cam').position().top);
     $('#wb-capture').css('left', $('#wb-cam').position().left);
     $(window).resize(function () {
@@ -71,7 +141,6 @@ $(function () {
     });
     var cam = $('#wb-cam')[0];
     $('#wb-capture').click(function () {
-        
         $('#wb-cam').data('enabled', 'true');
         $('#wb-map').attr('visibility', 'hidden');
         $('#wb-cam').attr('visibility', 'visible');
@@ -100,33 +169,60 @@ $(function () {
     });
     
     //overlay image on canvas and map live
-    cam.addEventListener('play', function () {
-        //overlayCapture(this, context, 1920, 1080);
+    $(cam).on({
+        play: function (e) {
+            overlayCapture(this, context, 1920, 1080);
+        }
     });
-
     function overlayCapture(capture, context, width, height) {
         context.drawImage(capture, 0, 0, width, height);
-
         setTimeout(overlayCapture, 10, cam, context, width, height);
     }
 
-    //eraser button
-    $('#wb-eraser').click(function () {
-        tool = tools.eraser;
-    });
-
-    //marker button
-    $('#wb-marker').click(function () {
-        tool = tools.marker;
-    });
-
-    //clear button
-    $('#wb-clear').click(function () {
-        context.clearRect(0, 0, 1920, 1080);
+    //scroll button
+    $('#wb-scroll').click(function () {
+        tools.selectedTool = tools.scroll;
+        $('html, body').css({
+            overflow: 'auto',
+            height: 'auto'
+        });
+        $('#wb-canvas').css('cursor', 'move');
     });
 
     //marker width
-    $("#wb-line-width").change(function () {
-        lineWidth = $(this).val();
+    $("#wb-line-width").change(function (e) {
+        e.preventDefault();
+        tools.marker.lineWidth = $(this).val();
     });
+
+    //eraser button
+    $('#wb-eraser').click(function (e) {
+        e.preventDefault();
+        tools.selectedTool = tools.eraser;
+        disableScrolling();
+    });
+
+    //marker button
+    $('#wb-marker').click(function (e) {
+        e.preventDefault();
+        tools.selectedTool = tools.marker;
+        disableScrolling();
+    });
+    
+    //clear button
+    $('#wb-clear').click(function (e) {
+        e.preventDefault();
+        context.clearRect(0, 0, 1920, 1080);
+        disableScrolling();
+    });
+
+    //lock canvas scrolling
+    function disableScrolling() {
+        $('#wb-canvas').css('cursor', 'crosshair');
+
+        $('html, body').css({
+            overflow: 'hidden',
+            height: '100%'
+        });
+    }
 });

@@ -43,12 +43,12 @@
             </li>
             <!-- Right-sided navbar links -->
             <li class="w3-right w3-hide-small">
-                <a href="#" title="New WriteBoard" onclick="document.getElementById('wb-register').style.display='block'">
+                <a id="wb-new" href="#" title="New WriteBoard" onclick="document.getElementById('wb-register').style.display='block'">
                     <i class="fa fa-plus"></i>
                 </a>
             </li>
             <li class="w3-right w3-hide-small">
-                <a href="#" title="Save Changes">
+                <a id="wb-save" href="#" title="Save Changes">
                     <i class="fa fa-save"></i>
                 </a>
             </li>
@@ -63,7 +63,7 @@
     <!-- Sidenav on small screens when clicking the menu icon -->
     <nav class="w3-sidenav w3-card-2 w3-animate-left w3-hide-medium w3-hide-large" style="display:none" id="wb-side-nav">
         <a href="javascript:void(0)" onclick="w3_close()" class="w3-large w3-padding-16">Close ×</a>
-        <a href="#" onclick="document.getElementById('wb-register').style.display='block'">
+        <a id="wb-new" href="#" onclick="document.getElementById('wb-register').style.display='block'">
             <i class="fa fa-plus"></i>
             New WriteBoard
         </a>
@@ -82,7 +82,21 @@
             </header>
 
             <div id="wb-modal-container">
-                <form asp-controller="App" asp-action="RegisterWriteBoard" method="post">
+                <form action="/register" method="post">
+                    <div class="row">
+                        <label>
+                            <i class="fa fa-tv"></i>
+                            <b>Resolution</b>
+                        </label>
+                        <select id="wb-res" name="wb-res">
+                            <option value="2160" selected>2160P (4K)</option>
+                            <option value="1440">1440P (2K)</option>
+                            <option value="1080">1080P</option>
+                            <option value="720">720P</option>
+                        </select>
+                    </div>
+                    <br/>
+
                     <div class="row">
                         <label>
                             <i class="fa fa-key"></i>

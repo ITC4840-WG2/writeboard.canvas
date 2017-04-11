@@ -6129,7 +6129,9 @@
       "Microsoft.VisualStudio.Web.BrowserLink.Loader >= 14.1.0",
       "System.Data.SqlClient >= 4.1.0"
     ],
-    ".NETFramework,Version=v4.5.2": []
+    ".NETFramework,Version=v4.5.2": [
+      "System.Web >= 4.0.0"
+    ]
   },
   "tools": {
     ".NETCoreApp,Version=v1.0": {
