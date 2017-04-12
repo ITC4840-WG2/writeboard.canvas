@@ -198,6 +198,8 @@ $(function () {
     //scroll button
     $('#wb-scroll').click(function () {
         tools.selectedTool = tools.scroll;
+        $('.wb-tool').removeClass('active');
+        $(this).addClass('active');
         $('html, body').css({
             overflow: 'auto',
             height: 'auto'
@@ -215,6 +217,8 @@ $(function () {
     $('#wb-eraser').click(function (e) {
         e.preventDefault();
         tools.selectedTool = tools.eraser;
+        $('.wb-tool').removeClass('active');
+        $(this).addClass('active');
         disableScrolling();
     });
 
@@ -222,6 +226,8 @@ $(function () {
     $('#wb-marker').click(function (e) {
         e.preventDefault();
         tools.selectedTool = tools.marker;
+        $('.wb-tool').removeClass('active');
+        $(this).addClass('active');
         disableScrolling();
     });
     
