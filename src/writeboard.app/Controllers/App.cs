@@ -68,16 +68,18 @@ namespace writeboard.app.Controllers
                     cmd.CommandText = sqlCMD;
                     cmd.ExecuteNonQuery();
                 }
+                else
+                {
+                    //fetch writeboard by the provided key
+                    sqlCMD = "SELECT WriteBoardState FROM writeboards WHERE WriteBoardKey = '{0}'";
+                    sqlCMD = string.Format(sqlCMD, wbKey);
+                    cmd.CommandText = sqlCMD;
+                    string wbState = (string)cmd.ExecuteScalar();
 
-                //fetch writeboard by the provided key
-                sqlCMD = "SELECT WriteBoardState FROM writeboards WHERE WriteBoardKey = '{0}'";
-                sqlCMD = string.Format(sqlCMD, wbKey);
-                cmd.CommandText = sqlCMD;
-                string wbState = (string) cmd.ExecuteScalar();
-
-                //set viewbag values
-                ViewBag.wbKey = wbKey ?? "";
-                ViewBag.wbState = wbState ?? "";
+                    //set viewbag values
+                    ViewBag.wbKey = wbKey ?? "";
+                    ViewBag.wbState = wbState ?? "";
+                }                
             }
 
             return View();

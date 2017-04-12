@@ -1,5 +1,10 @@
 ﻿var tools = {};
 $(function () {
+    //show registration when no key is set
+    if (wbKey == '') {
+        document.getElementById('wb-register').style.display = 'block'
+    }
+
     //tool init options
     tools = {
         marker: {
@@ -38,24 +43,17 @@ $(function () {
     //mini map
     var map = $('#wb-map')[0];
     var mapContext = map.getContext('2d');
-    //drawMap(canvas, mapContext, 1920, 1080);
+    drawMap(canvas, mapContext, 240, 135);
 
-    //function drawMap(canvas, mapContext, width, height) {
-    //    var image = new Image();
-    //    image.src = canvas.toDataURL();
-    //    mapContext.drawImage(image, 0, 0, width, height);
-
-    //    setTimeout(drawMap, 10, canvas, mapContext, width, height);
-    //}
-
-    //load canvas state
-    if (wbState) {
+    function drawMap(canvas, mapContext, width, height) {
         var image = new Image();
+
         image.onload = function () {
-            context.drawImage(image, 0, 0);
-            mapContext.drawImage(image, 0, 0);
+            mapContext.drawImage(image, 0, 0, width, height);
         };
-        image.src = wbState;
+        image.src = canvas.toDataURL();
+
+        //setTimeout(drawMap, 10, canvas, mapContext, width, height);
     }
    
     //canvas interaction events
@@ -119,13 +117,31 @@ $(function () {
         e.preventDefault();
     });
 
+    //load canvas state
+    wbState = $('#wb-state').val();
+    if (wbState) {
+        var state = new Image();
+        state.src = '';
+        state.onload = function () {
+            context.drawImage(state, 0, 0, 1920, 1080);
+            mapContext.drawImage(state, 0, 0, 240, 135);
+        };
+        state.src = wbState;
+    }
+
     //save writeboard state
     $('#wb-save').click(function (e) {
         e.preventDefault();
+
+        //set new writeboard state
+        wbState = canvas.toDataURL("image/png");
+
+        //send state to server
         $.ajax({
-            type: "POST",
+            type: 'POST',
+            cache: false,
             url: '/save',
-            data: { 'wb-key': wbKey, 'wb-state': canvas.toDataURL() },
+            data: { 'wb-key': wbKey, 'wb-state': wbState },
             success: function () {
                 alert('WriteBoard State Saved Succesfully!');
             }
@@ -134,10 +150,10 @@ $(function () {
 
     //image capture
     $('#wb-capture').css('top', $('#wb-cam').position().top);
-    $('#wb-capture').css('left', $('#wb-cam').position().left);
+    $('#wb-capture').css('left', $('#wb-cam').position().left - 10);
     $(window).resize(function () {
         $('#wb-capture').css('top', $('#wb-cam').position().top);
-        $('#wb-capture').css('left', $('#wb-cam').position().left);
+        $('#wb-capture').css('left', $('#wb-cam').position().left - 10);
     });
     var cam = $('#wb-cam')[0];
     $('#wb-capture').click(function () {
