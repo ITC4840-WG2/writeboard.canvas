@@ -23,6 +23,16 @@
     font-size: 23px;
 }
 
+#wb-save:hover {
+    background-color: #205081;
+    color: green;
+}
+
+#wb-new:hover {
+    background-color: #205081;
+    color: yellow;
+}
+
 #wb-navbar {
     background-color: #205081;
     max-height: 70px;
@@ -135,6 +145,12 @@
 .wb-tool:hover {
     color: #FFF;
     text-decoration: none;
+    background: darkgray;
+}
+
+.wb-tool.active {
+    background-color: #205081;
+    color: #fff;
 }
 
 /* canvas */
