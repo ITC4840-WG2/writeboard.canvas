@@ -2,11 +2,20 @@
 $(function () {
     //show registration when no key is set
     if (wbKey == '') {
-        document.getElementById('wb-register').style.display = 'block'
+        $('#wb-register').css('display', 'block');
+        $('#wb-modal-close').hide();
+    }
+    else {
+        $('#wb-capture').prop('disabled', false);
+        $('#wb-modal-close').show();
     }
 
     //tool init options
     tools = {
+        text: {
+            toolName: 'text',
+            font: '14px sans-serif'
+        },
         marker: {
             toolName: 'marker',
             strokeStyle: $('#wb-color-picker').val(),
@@ -43,17 +52,17 @@ $(function () {
     //mini map
     var map = $('#wb-map')[0];
     var mapContext = map.getContext('2d');
+    mapContext.webkitImageSmoothingEnabled = false;
+    mapContext.mozImageSmoothingEnabled = false;
+    mapContext.imageSmoothingEnabled = false;
     drawMap(canvas, mapContext, 240, 135);
-
     function drawMap(canvas, mapContext, width, height) {
         var image = new Image();
 
         image.onload = function () {
-            mapContext.drawImage(image, 0, 0, width, height);
+            mapContext.drawImage(image, 0, 0, wbWidth, wbHeight, 0, 0, width, height);
         };
         image.src = canvas.toDataURL();
-
-        //setTimeout(drawMap, 10, canvas, mapContext, width, height);
     }
    
     //canvas interaction events
@@ -64,6 +73,10 @@ $(function () {
         mousedown: function (e) {
             mouseDown = true;
             mouseDownY = e.pageY;
+
+            //set tool specific options
+            $.extend(context, tools.selectedTool);
+
             lastEvent = e;
         },
         mousemove: function (e) {
@@ -71,12 +84,6 @@ $(function () {
                 context.beginPath();
                 context.moveTo(lastEvent.offsetX, lastEvent.offsetY);
                 context.lineTo(e.offsetX, e.offsetY);
-
-                //tool specific options
-                context.globalCompositeOperation = tools.selectedTool.globalCompositeOperation;
-                context.lineWidth = tools.selectedTool.lineWidth;
-                context.strokeStyle = tools.selectedTool.strokeStyle;
-                context.lineCap = tools.selectedTool.lineCap;
 
                 //execute event
                 context.stroke();
@@ -87,6 +94,7 @@ $(function () {
             }
         },
         mouseup: function (e) {
+            drawMap(canvas, mapContext, 240, 135);
             mouseDown = false;
         },
         touchstart: function (e) {
@@ -123,7 +131,7 @@ $(function () {
         var state = new Image();
         state.src = '';
         state.onload = function () {
-            context.drawImage(state, 0, 0, 1920, 1080);
+            context.drawImage(state, 0, 0, wbWidth, wbHeight);
             mapContext.drawImage(state, 0, 0, 240, 135);
         };
         state.src = wbState;
@@ -149,6 +157,8 @@ $(function () {
     });
 
     //image capture
+    $('#wb-capture').hide();
+    $('#wb-capture').prop('disabled', true);
     $('#wb-capture').css('top', $('#wb-cam').position().top);
     $('#wb-capture').css('left', $('#wb-cam').position().left - 10);
     $(window).resize(function () {
@@ -187,7 +197,7 @@ $(function () {
     //overlay image on canvas and map live
     $(cam).on({
         play: function (e) {
-            overlayCapture(this, context, 1920, 1080);
+            overlayCapture(this, context, wbWidth, wbHeight);
         }
     });
     function overlayCapture(capture, context, width, height) {
@@ -234,7 +244,8 @@ $(function () {
     //clear button
     $('#wb-clear').click(function (e) {
         e.preventDefault();
-        context.clearRect(0, 0, 1920, 1080);
+        context.clearRect(0, 0, wbWidth, wbHeight);
+        drawMap(canvas, mapContext, 240, 135);
         disableScrolling();
     });
 
