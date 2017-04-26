@@ -77,7 +77,7 @@ namespace writeboard.app.Controllers
                     message.Subject = "WriteBoard - New Registration";
                     var bodyBuilder = new BodyBuilder();
                     bodyBuilder.HtmlBody = @"<h4>Your WriteBoard is available here: <a href='" + ViewBag.appURL + "/" + regKey + "'>" + ViewBag.appURL + "/" + regKey + "</h4>";
-                    message.Body = bodyBuilder.ToMessageBody();o
+                    message.Body = bodyBuilder.ToMessageBody();
 
                     using (var client = new SmtpClient())
                     {
