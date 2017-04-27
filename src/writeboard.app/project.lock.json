@@ -56,6 +56,23 @@
           }
         }
       },
+      "MailKit/1.3.0-beta7": {
+        "type": "package",
+        "dependencies": {
+          "MimeKit": "1.3.0-beta7"
+        },
+        "frameworkAssemblies": [
+          "System",
+          "System.Core",
+          "System.Data"
+        ],
+        "compile": {
+          "lib/net451/MailKit.dll": {}
+        },
+        "runtime": {
+          "lib/net451/MailKit.dll": {}
+        }
+      },
       "Microsoft.ApplicationInsights/2.2.0": {
         "type": "package",
         "compile": {
@@ -1333,6 +1350,23 @@
           "lib/net451/Microsoft.VisualStudio.Web.BrowserLink.Loader.dll": {}
         }
       },
+      "MimeKit/1.3.0-beta7": {
+        "type": "package",
+        "frameworkAssemblies": [
+          "System",
+          "System.Core",
+          "System.Data",
+          "System.Security"
+        ],
+        "compile": {
+          "lib/net451/BouncyCastle.dll": {},
+          "lib/net451/MimeKit.dll": {}
+        },
+        "runtime": {
+          "lib/net451/BouncyCastle.dll": {},
+          "lib/net451/MimeKit.dll": {}
+        }
+      },
       "NETStandard.Library/1.6.1": {
         "type": "package",
         "dependencies": {
@@ -2152,6 +2186,31 @@
         "runtimes/win7-arm/native/libuv.dll",
         "runtimes/win7-x64/native/libuv.dll",
         "runtimes/win7-x86/native/libuv.dll"
+      ]
+    },
+    "MailKit/1.3.0-beta7": {
+      "sha512": "LalD+6uE97WdfZ9Ohmz2ZeYbPXzql4VNazGO/e9PLMENKNPwENc4eSr8v/r+mHY3EsRsAH34DCkub8rA4Zwyrw==",
+      "type": "package",
+      "path": "MailKit/1.3.0-beta7",
+      "files": [
+        "MailKit.1.3.0-beta7.nupkg.sha512",
+        "MailKit.nuspec",
+        "lib/MonoAndroid10/MailKit.dll",
+        "lib/MonoAndroid10/MailKit.xml",
+        "lib/Xamarin.iOS10/MailKit.dll",
+        "lib/Xamarin.iOS10/MailKit.xml",
+        "lib/dotnet5.5/MailKit.dll",
+        "lib/dotnet5.5/MailKit.xml",
+        "lib/net40/MailKit.dll",
+        "lib/net40/MailKit.xml",
+        "lib/net45/MailKit.dll",
+        "lib/net45/MailKit.xml",
+        "lib/net451/MailKit.dll",
+        "lib/net451/MailKit.xml",
+        "lib/win81/MailKit.dll",
+        "lib/win81/MailKit.xml",
+        "lib/wpa81/MailKit.dll",
+        "lib/wpa81/MailKit.xml"
       ]
     },
     "Microsoft.ApplicationInsights/2.2.0": {
@@ -3306,6 +3365,45 @@
         "lib/net451/Microsoft.VisualStudio.Web.BrowserLink.Loader.xml",
         "lib/netstandard1.5/Microsoft.VisualStudio.Web.BrowserLink.Loader.dll",
         "lib/netstandard1.5/Microsoft.VisualStudio.Web.BrowserLink.Loader.xml"
+      ]
+    },
+    "MimeKit/1.3.0-beta7": {
+      "sha512": "M7F4OnPXfcI4AljQUdvok29vz3DEruiqIBDIn6zGVdFQpNpaVbmrp80YLX9SH2hJO+8fSOX6/k3ScUXqZheFSQ==",
+      "type": "package",
+      "path": "MimeKit/1.3.0-beta7",
+      "files": [
+        "MimeKit.1.3.0-beta7.nupkg.sha512",
+        "MimeKit.nuspec",
+        "lib/MonoAndroid10/BouncyCastle.dll",
+        "lib/MonoAndroid10/MimeKit.dll",
+        "lib/MonoAndroid10/MimeKit.xml",
+        "lib/Xamarin.iOS10/BouncyCastle.dll",
+        "lib/Xamarin.iOS10/MimeKit.dll",
+        "lib/Xamarin.iOS10/MimeKit.xml",
+        "lib/dotnet5.4/MimeKit.dll",
+        "lib/dotnet5.4/MimeKit.xml",
+        "lib/net35/BouncyCastle.dll",
+        "lib/net35/BouncyCastle.xml",
+        "lib/net35/MimeKit.dll",
+        "lib/net35/MimeKit.xml",
+        "lib/net40/BouncyCastle.dll",
+        "lib/net40/BouncyCastle.xml",
+        "lib/net40/MimeKit.dll",
+        "lib/net40/MimeKit.xml",
+        "lib/net45/BouncyCastle.dll",
+        "lib/net45/BouncyCastle.xml",
+        "lib/net45/MimeKit.dll",
+        "lib/net45/MimeKit.xml",
+        "lib/net451/BouncyCastle.dll",
+        "lib/net451/BouncyCastle.xml",
+        "lib/net451/MimeKit.dll",
+        "lib/net451/MimeKit.xml",
+        "lib/portable-net45+win+wp80+MonoAndroid10+Xamarin.iOS10+MonoTouch10/MimeKit.dll",
+        "lib/portable-net45+win+wp80+MonoAndroid10+Xamarin.iOS10+MonoTouch10/MimeKit.xml",
+        "lib/portable-net45+win+wp80+MonoAndroid10+Xamarin.iOS10+MonoTouch10/Portable.Text.Encoding.dll",
+        "lib/wpa81/MimeKit.dll",
+        "lib/wpa81/MimeKit.xml",
+        "lib/wpa81/Portable.Text.Encoding.dll"
       ]
     },
     "NETStandard.Library/1.6.1": {
@@ -6112,6 +6210,7 @@
   "projectFileDependencyGroups": {
     "": [
       "BundlerMinifier.Core >= 2.2.306",
+      "MailKit >= 1.3.0-beta7",
       "Microsoft.ApplicationInsights.AspNetCore >= 2.0.0",
       "Microsoft.AspNetCore.Diagnostics >= 1.1.0",
       "Microsoft.AspNetCore.Mvc >= 1.1.1",

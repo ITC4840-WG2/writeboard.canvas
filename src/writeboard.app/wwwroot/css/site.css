@@ -25,12 +25,12 @@
 
 #wb-save:hover {
     background-color: #205081;
-    color: green;
+    color: lightgreen;
 }
 
 #wb-new:hover {
     background-color: #205081;
-    color: yellow;
+    color: lightblue;
 }
 
 #wb-navbar {
@@ -140,17 +140,17 @@
     border: 1px solid #ccc;
     width: 38px;
     height: 35px;
+    box-shadow: none;
 }
 
 .wb-tool:hover {
-    color: #FFF;
-    text-decoration: none;
-    background: darkgray;
+    box-shadow: 1px 1px 1px #000 inset;
 }
 
 .wb-tool.active {
     background-color: #205081;
     color: #fff;
+    box-shadow: 1px 1px 1px #000 inset;
 }
 
 /* canvas */
@@ -172,8 +172,6 @@ canvas {
 }
 
 #wb-cam {
-    width: 230px;
-    height: 300px;
     object-fit: cover;
 }
 

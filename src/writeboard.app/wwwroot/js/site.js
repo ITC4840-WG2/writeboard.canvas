@@ -2,11 +2,20 @@
 $(function () {
     //show registration when no key is set
     if (wbKey == '') {
-        document.getElementById('wb-register').style.display = 'block'
+        $('#wb-register').css('display', 'block');
+        $('#wb-modal-close').hide();
+    }
+    else {
+        $('#wb-capture').prop('disabled', false);
+        $('#wb-modal-close').show();
     }
 
     //tool init options
     tools = {
+        text: {
+            toolName: 'text',
+            font: '14px sans-serif'
+        },
         marker: {
             toolName: 'marker',
             strokeStyle: $('#wb-color-picker').val(),
@@ -43,50 +52,83 @@ $(function () {
     //mini map
     var map = $('#wb-map')[0];
     var mapContext = map.getContext('2d');
+    mapContext.webkitImageSmoothingEnabled = false;
+    mapContext.mozImageSmoothingEnabled = false;
+    mapContext.imageSmoothingEnabled = false;
     drawMap(canvas, mapContext, 240, 135);
-
     function drawMap(canvas, mapContext, width, height) {
         var image = new Image();
 
         image.onload = function () {
-            mapContext.drawImage(image, 0, 0, width, height);
+            mapContext.drawImage(image, 0, 0, wbWidth, wbHeight, 0, 0, width, height);
         };
         image.src = canvas.toDataURL();
-
-        //setTimeout(drawMap, 10, canvas, mapContext, width, height);
     }
    
     //canvas interaction events
     var lastEvent;
+    var hasInput = false;
     var mouseDown = false;
     var mouseDownY = 0;
     $('#wb-canvas').on({
         mousedown: function (e) {
             mouseDown = true;
             mouseDownY = e.pageY;
+
+            //set tool specific options
+            $.extend(context, tools.selectedTool);
+
+            if (tools.selectedTool.toolName === 'text' && !hasInput) {
+                //add input
+                var input = document.createElement('input');
+
+                input.type = 'text';
+                input.style.position = 'fixed';
+                input.style.left = (e.clientX - 4) + 'px';
+                input.style.top = (e.clientY - 4) + 'px';
+
+                //draw text on enter key
+                input.onkeydown = function (e) {
+                    var keyCode = e.keyCode;
+                    if (keyCode === 13) {
+                        drawText(input.value, parseInt(this.style.left, 10), parseInt(this.style.top, 10));
+
+                        document.body.removeChild(this);
+                        hasInput = false;
+                    }
+                }
+
+                function drawText(txt, txtX, txtY) {
+                    context.textBaseline = 'top';
+                    context.textAlign = 'left';
+                    context.font = '14px sans-serif';
+                    context.fillText(txt, txtX - 4, txtY - 4);
+                }
+
+                document.body.appendChild(input);
+                input.focus();
+
+                hasInput = true;
+            }
+
             lastEvent = e;
         },
         mousemove: function (e) {
-            if (mouseDown && tools.selectedTool.toolName !== 'scroll') {
+            if (mouseDown && tools.selectedTool.toolName !== 'scroll' && tools.selectedTool.toolName !== 'text') {
                 context.beginPath();
                 context.moveTo(lastEvent.offsetX, lastEvent.offsetY);
                 context.lineTo(e.offsetX, e.offsetY);
-
-                //tool specific options
-                context.globalCompositeOperation = tools.selectedTool.globalCompositeOperation;
-                context.lineWidth = tools.selectedTool.lineWidth;
-                context.strokeStyle = tools.selectedTool.strokeStyle;
-                context.lineCap = tools.selectedTool.lineCap;
 
                 //execute event
                 context.stroke();
                 lastEvent = e;
             }
-            else if (mouseDown && tools.selectedTool.toolName === 'scroll') {
+            else if (mouseDown && tools.selectedTool.toolName === 'scroll' && tools.selectedTool.toolName !== 'text') {
                 $(window).scrollTop($(window).scrollTop() + (mouseDownY - e.pageY));
             }
         },
         mouseup: function (e) {
+            drawMap(canvas, mapContext, 240, 135);
             mouseDown = false;
         },
         touchstart: function (e) {
@@ -123,7 +165,7 @@ $(function () {
         var state = new Image();
         state.src = '';
         state.onload = function () {
-            context.drawImage(state, 0, 0, 1920, 1080);
+            context.drawImage(state, 0, 0, wbWidth, wbHeight);
             mapContext.drawImage(state, 0, 0, 240, 135);
         };
         state.src = wbState;
@@ -149,6 +191,8 @@ $(function () {
     });
 
     //image capture
+    $('#wb-capture').hide();
+    $('#wb-capture').prop('disabled', true);
     $('#wb-capture').css('top', $('#wb-cam').position().top);
     $('#wb-capture').css('left', $('#wb-cam').position().left - 10);
     $(window).resize(function () {
@@ -187,7 +231,7 @@ $(function () {
     //overlay image on canvas and map live
     $(cam).on({
         play: function (e) {
-            overlayCapture(this, context, 1920, 1080);
+            overlayCapture(this, context, wbWidth, wbHeight);
         }
     });
     function overlayCapture(capture, context, width, height) {
@@ -200,7 +244,7 @@ $(function () {
         tools.selectedTool = tools.scroll;
         $('.wb-tool').removeClass('active');
         $(this).addClass('active');
-        $('html, body').css({
+        $('html').css({
             overflow: 'auto',
             height: 'auto'
         });
@@ -222,6 +266,15 @@ $(function () {
         disableScrolling();
     });
 
+    //text input button
+    $('#wb-text').click(function (e) {
+        e.preventDefault();
+        tools.selectedTool = tools.text;
+        $('.wb-tool').removeClass('active');
+        $(this).addClass('active');
+        disableScrolling();
+    });
+
     //marker button
     $('#wb-marker').click(function (e) {
         e.preventDefault();
@@ -234,7 +287,8 @@ $(function () {
     //clear button
     $('#wb-clear').click(function (e) {
         e.preventDefault();
-        context.clearRect(0, 0, 1920, 1080);
+        context.clearRect(0, 0, wbWidth, wbHeight);
+        drawMap(canvas, mapContext, 240, 135);
         disableScrolling();
     });
 
