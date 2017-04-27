@@ -67,6 +67,7 @@ $(function () {
    
     //canvas interaction events
     var lastEvent;
+    var hasInput = false;
     var mouseDown = false;
     var mouseDownY = 0;
     $('#wb-canvas').on({
@@ -77,10 +78,43 @@ $(function () {
             //set tool specific options
             $.extend(context, tools.selectedTool);
 
+            if (tools.selectedTool.toolName === 'text' && !hasInput) {
+                //add input
+                var input = document.createElement('input');
+
+                input.type = 'text';
+                input.style.position = 'fixed';
+                input.style.left = (e.clientX - 4) + 'px';
+                input.style.top = (e.clientY - 4) + 'px';
+
+                //draw text on enter key
+                input.onkeydown = function (e) {
+                    var keyCode = e.keyCode;
+                    if (keyCode === 13) {
+                        drawText(input.value, parseInt(this.style.left, 10), parseInt(this.style.top, 10));
+
+                        document.body.removeChild(this);
+                        hasInput = false;
+                    }
+                }
+
+                function drawText(txt, txtX, txtY) {
+                    context.textBaseline = 'top';
+                    context.textAlign = 'left';
+                    context.font = '14px sans-serif';
+                    context.fillText(txt, txtX - 4, txtY - 4);
+                }
+
+                document.body.appendChild(input);
+                input.focus();
+
+                hasInput = true;
+            }
+
             lastEvent = e;
         },
         mousemove: function (e) {
-            if (mouseDown && tools.selectedTool.toolName !== 'scroll') {
+            if (mouseDown && tools.selectedTool.toolName !== 'scroll' && tools.selectedTool.toolName !== 'text') {
                 context.beginPath();
                 context.moveTo(lastEvent.offsetX, lastEvent.offsetY);
                 context.lineTo(e.offsetX, e.offsetY);
@@ -89,7 +123,7 @@ $(function () {
                 context.stroke();
                 lastEvent = e;
             }
-            else if (mouseDown && tools.selectedTool.toolName === 'scroll') {
+            else if (mouseDown && tools.selectedTool.toolName === 'scroll' && tools.selectedTool.toolName !== 'text') {
                 $(window).scrollTop($(window).scrollTop() + (mouseDownY - e.pageY));
             }
         },
@@ -210,7 +244,7 @@ $(function () {
         tools.selectedTool = tools.scroll;
         $('.wb-tool').removeClass('active');
         $(this).addClass('active');
-        $('html, body').css({
+        $('html').css({
             overflow: 'auto',
             height: 'auto'
         });
@@ -227,6 +261,15 @@ $(function () {
     $('#wb-eraser').click(function (e) {
         e.preventDefault();
         tools.selectedTool = tools.eraser;
+        $('.wb-tool').removeClass('active');
+        $(this).addClass('active');
+        disableScrolling();
+    });
+
+    //text input button
+    $('#wb-text').click(function (e) {
+        e.preventDefault();
+        tools.selectedTool = tools.text;
         $('.wb-tool').removeClass('active');
         $(this).addClass('active');
         disableScrolling();
