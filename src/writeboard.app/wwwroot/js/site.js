@@ -191,25 +191,29 @@ $(function () {
     });
 
     //image capture
-    $('#wb-capture').hide();
-    $('#wb-capture').prop('disabled', true);
+    //$('#wb-capture').hide();
+    //$('#wb-capture').prop('disabled', true);
     $('#wb-capture').css('top', $('#wb-cam').position().top);
-    $('#wb-capture').css('left', $('#wb-cam').position().left - 10);
+    $('#wb-capture').css('left', $('#wb-cam').position().left);
     $(window).resize(function () {
         $('#wb-capture').css('top', $('#wb-cam').position().top);
-        $('#wb-capture').css('left', $('#wb-cam').position().left - 10);
+        $('#wb-capture').css('left', $('#wb-cam').position().left);
     });
     var cam = $('#wb-cam')[0];
+    var captureImage = true;
     $('#wb-capture').click(function () {
-        $('#wb-cam').data('enabled', 'true');
-        $('#wb-map').attr('visibility', 'hidden');
-        $('#wb-cam').attr('visibility', 'visible');
-        $('#wb-capture').html('<i class="fa fa-close"></i>');
+        //$('#wb-cam').data('enabled', 'true');
+        //$('#wb-map').attr('visibility', 'hidden');
+        //$('#wb-cam').attr('visibility', 'visible');
+        //$('#wb-capture').html('<i class="fa fa-close"></i>');
 
-        //$('#wb-cam').data('enabled', 'false');
-        //$('#wb-map').attr('visibility', 'visible');
-        //$('#wb-cam').attr('visibility', 'hidden');
-        //$('#wb-capture').html('<i class="fa fa-camera"></i>');
+        //stop capturing
+        if (captureImage) {
+            captureImage = false;
+        }
+        else {
+            captureImage = true;
+        }
 
         var videoURL = window.URL || window.webkitURL;
 
@@ -235,6 +239,11 @@ $(function () {
         }
     });
     function overlayCapture(capture, context, width, height) {
+        if (captureImage) {
+            return false;
+        }
+
+        //cam overlay loop
         context.drawImage(capture, 0, 0, width, height);
         setTimeout(overlayCapture, 10, cam, context, width, height);
     }
