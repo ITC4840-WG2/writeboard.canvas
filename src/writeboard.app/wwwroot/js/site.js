@@ -58,7 +58,7 @@ $(function () {
     drawMap(canvas, mapContext, 240, 135);
     function drawMap(canvas, mapContext, width, height) {
         var image = new Image();
-
+        mapContext.clearRect(0, 0, width, height);
         image.onload = function () {
             mapContext.drawImage(image, 0, 0, wbWidth, wbHeight, 0, 0, width, height);
         };
@@ -246,7 +246,8 @@ $(function () {
         $(this).addClass('active');
         $('html').css({
             overflow: 'auto',
-            height: 'auto'
+            height: 'auto',
+            width: 'auto'
         });
         $('#wb-canvas').css('cursor', 'move');
     });
@@ -296,9 +297,10 @@ $(function () {
     function disableScrolling() {
         $('#wb-canvas').css('cursor', 'crosshair');
 
-        $('html, body').css({
+        $('html').css({
             overflow: 'hidden',
-            height: '100%'
+            height: '100%',
+            width: '100%'
         });
     }
 });
